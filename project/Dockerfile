@@ -4,13 +4,13 @@ FROM node:20-alpine as build
 # Set working directory
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+# Copy package files from the project directory
+COPY project/package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy project files
+# Copy the rest of the project files
 COPY . .
 
 # Build the application
@@ -19,10 +19,10 @@ RUN npm run build
 # Stage 2: Serve the built application
 FROM nginx:alpine
 
-# Copy the build output from previous stage
+# Copy the build output from the previous stage
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Copy nginx configuration (optional, using default for now)
+# Expose port 80
 EXPOSE 80
 
 # Start nginx
